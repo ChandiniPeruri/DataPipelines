@@ -27,8 +27,8 @@ class DataQualityOperator(BaseOperator):
         for key in self.tables:
             sql=f"SELECT COUNT(*) FROM {key} WHERE {self.tables[key]} IS NULL"
             self.log.info(sql)
-            #num_records = redshift.get_records(sql)
-            #self.log.info(f"Number of Records {num_records[0][0]}")
+            num_records = redshift.get_records(sql)
+            self.log.info(f"Number of Records {num_records[0][0]}")
         
         if error_count > 0:
             raise ValueError("Data Quality Failed")
