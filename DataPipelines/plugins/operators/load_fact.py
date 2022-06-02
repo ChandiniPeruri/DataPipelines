@@ -8,7 +8,7 @@ class LoadFactOperator(BaseOperator):
 
     @apply_defaults
     def __init__(self,
-                 redshift_conn_id='',
+                 redshift_conn_id='redshift',
                  sql='',
                  table='',
                  truncate=False,
@@ -20,15 +20,16 @@ class LoadFactOperator(BaseOperator):
         self.truncate=truncate
 
     def execute(self, context):
-                 postgres_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
-                 if self.truncate:
-                    self.log.info(f"Truncate table {self.table}")
-                    postgres.run(f"TRUNCATE {self.table}")
-                 
-                    self.log.info(f"Load Fact table {self.table}")
-                    postgres.run(f"INSERT INTO {self.table}{self.sql}")
-                 
-                    
+        postgres_hook = PostgresHook(postgres_conn_id=self.redshift_conn_id)
+            
+        if self.truncate:
+            self.log.info(f"Truncate table {self.table}")
+            postgres_hook.run(f"TRUNCATE {self.table}")
+        
+        self.log.info(f"Load Fact table {self.table}")
+        postgres_hook.run(f"INSERT INTO {self.table}{self.sql}")
+
+
                  
                  
            
